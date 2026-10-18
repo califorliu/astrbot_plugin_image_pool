@@ -1,0 +1,12 @@
+{
+  "pages": {
+    "manage": {
+      "title": "Image pool manager",
+      "description": "Browse thumbnails, manage categories and block images"
+    }
+  },
+  "plugin": {
+    "name": "Image Pool",
+    "description": "Character image pool: /加图 to collect, /<name> for a random image, /图库 to organize categories and block images."
+  }
+}

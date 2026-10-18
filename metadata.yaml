@@ -1,0 +1,11 @@
+name: astrbot_plugin_image_pool
+display_name: 角色图库
+desc: 角色图库插件 —— /加图 支持多分类与引用收录，/分类名 或 /发图 随机出图（支持多图与指定 id），/删图 与 /移动 支持引用定位，/图库 整理分类、屏蔽与别名；群级三档权限；可选群内潜水采集。
+version: 1.7.0
+author: califorliu
+repo: https://github.com/califorliu/astrbot_plugin_image_pool
+support_platforms:
+  - aiocqhttp
+# 注意：这里刻意不写 >=4.24.1。命令侧功能在更旧的版本上完全可用，
+# 只有 WebUI 管理页需要 >=4.24.1，缺失时插件会自动跳过路由注册并告警。
+astrbot_version: ">=4.13.0"

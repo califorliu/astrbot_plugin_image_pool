@@ -1,0 +1,290 @@
+{
+  "plugin_admins": {
+    "description": "全局管理员",
+    "hint": "用户 ID（群聊发 /sid 查），只按发送者匹配：填群号无效。可操作整库：分类增删改、删任意图片、解除全局指纹拉黑、执行清理。与 AstrBot 全局管理员互相独立，避免权限越界。",
+    "type": "list",
+    "default": []
+  },
+  "group_admins": {
+    "description": "群级管理员",
+    "hint": "格式「群号:用户ID」，如 123456:10001；填「*:用户ID」表示在所有群都是群级管理员。只能管理本群采集的图片，不能动分类。",
+    "type": "list",
+    "default": []
+  },
+  "open_groups": {
+    "description": "白名单群",
+    "hint": "填群号或 UMO。这些群里所有成员都能加图与发图。",
+    "type": "list",
+    "obvious_hint": true,
+    "default": []
+  },
+  "post_groups": {
+    "description": "发图群",
+    "hint": "填群号或 UMO。这些群里仅管理员可加图，所有成员可发图。",
+    "type": "list",
+    "obvious_hint": true,
+    "default": []
+  },
+  "default_group_mode": {
+    "description": "未配置群的模式",
+    "hint": "不在上面两个名单里的群使用哪种模式。默认「仅管理员」最安全：装好插件不会立刻被陌生人刷图。",
+    "type": "string",
+    "options": ["none", "post", "whitelist"],
+    "labels": ["未配置：仅管理员可操作", "发图群：仅管理员可加图", "白名单群：全员可加图"],
+    "obvious_hint": true,
+    "default": "none"
+  },
+  "private_mode": {
+    "description": "私聊模式",
+    "hint": "私聊是 1v1，不存在刷图压力，默认放开请求、限制写入。",
+    "type": "string",
+    "options": ["none", "post", "whitelist"],
+    "labels": ["仅管理员可操作", "发图：全员可发图", "白名单：全员可加图"],
+    "default": "post"
+  },
+  "whitelist_allow_manage": {
+    "description": "白名单群可管理",
+    "hint": "允许白名单群的普通成员删图/屏蔽。危险：等于全群可删图，默认关闭。即使开启也只限本群采集的图片；分类的新建/改名/删除始终只有全局管理员能做。",
+    "type": "bool",
+    "obvious_hint": true,
+    "default": false
+  },
+  "max_batch_fetch": {
+    "description": "单次出图上限",
+    "hint": "多图指令一次最多发几张，超出会被截断，防止刷屏与流量放大。",
+    "type": "int",
+    "slider": { "min": 1, "max": 50, "step": 1 },
+    "default": 10
+  },
+  "batch_send_mode": {
+    "description": "多图发送方式",
+    "hint": "合并转发包裹成聊天记录，观感最好；若平台不支持会自动降级为单条多图。",
+    "type": "string",
+    "options": ["forward", "chain", "separate"],
+    "labels": ["合并转发（聊天记录，推荐）", "单条消息多张图", "逐条发送"],
+    "default": "forward"
+  },
+  "forward_nickname": {
+    "description": "转发显示昵称",
+    "hint": "合并转发里每个节点显示的发送者昵称。",
+    "type": "string",
+    "default": "图库"
+  },
+  "silent_groups": {
+    "description": "静默群",
+    "hint": "填群号或 UMO。这些群里指令照常执行，但不产出任何文本回复。只影响「是否回话」，不影响图片存到哪个分类。",
+    "type": "list",
+    "obvious_hint": true,
+    "default": []
+  },
+  "auto_silent_in_collect_groups": {
+    "description": "偷图群自动静默",
+    "hint": "采集群自动进入静默，不必在「静默群」里重复填写。注意这会连带让 /加图 在里面执行但不回话；不想要就关掉。",
+    "type": "bool",
+    "obvious_hint": true,
+    "default": true
+  },
+  "silent_scope": {
+    "description": "静默范围",
+    "hint": "只静默文本时，用户明确请求的图片仍会发出。",
+    "type": "string",
+    "options": ["text_only", "all"],
+    "labels": ["只静默文本（图片照发）", "全静默（连图片也不发）"],
+    "default": "text_only"
+  },
+  "max_images_per_msg": {
+    "description": "单条消息图片上限",
+    "hint": "/加图 与自动采集单条消息最多处理几张图片。",
+    "type": "int",
+    "slider": { "min": 1, "max": 30, "step": 1 },
+    "default": 9
+  },
+  "max_tags_per_add": {
+    "description": "单次加图分类上限",
+    "hint": "一条 /加图 A B C 最多能同时打几个分类（tag）。超出部分会被忽略。每张图会分别落进每个分类，因此占用空间也按倍数增长。",
+    "type": "int",
+    "slider": { "min": 1, "max": 10, "step": 1 },
+    "default": 5
+  },
+  "tag_auto_create": {
+    "description": "自动新建分类",
+    "hint": "关闭后，指令里出现没见过的分类名不再静默新建，而是拒绝并提示可能的正确分类。想彻底根治「打错字就多出一个分类」就关掉它（建议先配好别名）。",
+    "type": "bool",
+    "obvious_hint": true,
+    "default": true
+  },
+  "max_aliases_per_tag": {
+    "description": "单分类别名上限",
+    "hint": "一个分类最多能登记多少个别名，防止别名表变成垃圾桶。",
+    "type": "int",
+    "slider": { "min": 1, "max": 50, "step": 1 },
+    "default": 20
+  },
+  "alias_suggest_on_miss": {
+    "description": "未命中给建议",
+    "hint": "分类名没匹配上时，回一句「你是不是想找 ×」。只提示、不自动改写解析结果（否则同一个输入会随分类集合漂移）。",
+    "type": "bool",
+    "default": true
+  },
+  "at_sender": {
+    "description": "出图时 @ 发送者",
+    "hint": "开启后每次出图都会先 @ 一下请求者。",
+    "type": "bool",
+    "default": true
+  },
+  "list_limit": {
+    "description": "/图库 列表条数",
+    "hint": "/图库 列表 最多展示多少个分类。",
+    "type": "int",
+    "slider": { "min": 5, "max": 100, "step": 5 },
+    "default": 30
+  },
+  "bare_name_enable": {
+    "description": "允许裸分类名",
+    "hint": "不加斜杠直接发分类名也能触发出图。与 MaiBot 共存时会导致双回复，仅在私聊或无 MaiBot 的小群开启。",
+    "type": "bool",
+    "default": false
+  },
+  "bare_name_groups": {
+    "description": "裸触发白名单群",
+    "hint": "群号或 UMO。留空=不限制，前提是已开启上一项。",
+    "type": "list",
+    "default": []
+  },
+  "reply_groups": {
+    "description": "允许出图的群",
+    "hint": "群号或 UMO。留空=所有会话都可出图。",
+    "type": "list",
+    "default": []
+  },
+  "fallback_llm_on_miss": {
+    "description": "未命中交给 AI",
+    "hint": "/分类名 在库里找不到图时，是否交给 LLM 兜底回复。",
+    "type": "bool",
+    "default": true
+  },
+  "default_namespace": {
+    "description": "删分类的迁移目标",
+    "hint": "删除某个分类时，里面的图片搬到哪个分类。注意与「采集落点」不是同一个设置，只是默认值恰好相同。",
+    "type": "string",
+    "obvious_hint": true,
+    "default": "未分类"
+  },
+  "allow_purge": {
+    "description": "允许连图删除分类",
+    "hint": "危险：删除分类时把里面的图片一并删除，不可恢复。默认关闭。",
+    "type": "bool",
+    "obvious_hint": true,
+    "default": false
+  },
+  "thumb_size": {
+    "description": "缩略图边长",
+    "hint": "WebUI 管理页缩略图的最长边像素。调大可看清细节，但单页内存占用也会变大。",
+    "type": "int",
+    "slider": { "min": 64, "max": 1024, "step": 32 },
+    "default": 320
+  },
+  "auto_collect": {
+    "description": "开启潜水采集",
+    "hint": "自动收录群内他人发送的图片，只入库、不回复。是否采集只由这个开关决定，与权限配置无关。",
+    "type": "bool",
+    "obvious_hint": true,
+    "default": false
+  },
+  "collect_groups": {
+    "description": "采集群",
+    "hint": "群号或 UMO。留空 = 所有群都采集（表示「不限制」，不是「不启用」）。一旦填写，这些群会被视为偷图群并自动静默。",
+    "type": "list",
+    "obvious_hint": true,
+    "default": []
+  },
+  "collect_namespace": {
+    "description": "采集落点分类",
+    "hint": "采集来的图片落到哪个分类。与「删分类的迁移目标」无关，只是默认值相同；想区分就把这里改成「采集」。/图库 去重未分类 也只作用于这个分类。",
+    "type": "string",
+    "obvious_hint": true,
+    "default": "未分类"
+  },
+  "collect_skip_commands": {
+    "description": "跳过指令消息",
+    "hint": "不采集「发给机器人的消息」（命中指令的、或以唤醒前缀开头的）。关掉会让 /加图 携带的图片被采集器再收一份到上面的采集落点。",
+    "type": "bool",
+    "obvious_hint": true,
+    "default": true
+  },
+  "collect_at_bot_reply": {
+    "description": "被 @ 时也采集",
+    "hint": "默认关闭，避免与 AI 回复抢答。",
+    "type": "bool",
+    "default": false
+  },
+  "collect_faces": {
+    "description": "登记表情 id",
+    "hint": "QQ 表情只有 id、消息里没有图片本体，开启后仅把 id 记到 faces.jsonl 便于后续按 id 取素材。",
+    "type": "bool",
+    "default": false
+  },
+  "collect_sender_mode": {
+    "description": "发送者过滤模式",
+    "hint": "白名单模式下名单留空 = 谁都不采集（安全默认）；黑名单留空 = 全部放行。只影响自动采集，不影响 /加图 指令权限。",
+    "type": "string",
+    "options": ["blacklist", "whitelist"],
+    "labels": ["黑名单：名单内的人不采集", "白名单：只采集名单内的人"],
+    "obvious_hint": true,
+    "default": "blacklist"
+  },
+  "collect_senders": {
+    "description": "发送者名单",
+    "hint": "用户 ID（/sid 查）。含义由上面的模式决定。管理员同样受这个过滤约束——它是内容治理规则，不是权限规则。",
+    "type": "list",
+    "obvious_hint": true,
+    "default": []
+  },
+  "skip_senders": {
+    "description": "旧版排除名单",
+    "hint": "兼容 v1.3 的旧键：仅在黑名单模式下追加排除。建议改用上面两项。",
+    "type": "list",
+    "default": []
+  },
+  "allow_reply_collect": {
+    "description": "允许引用取图",
+    "hint": "引用一条含图片的消息后再发 /加图、/删图、/移动 即可按图操作。只在指令路径生效；被动采集绝不会回拉引用消息，避免被诱导去取任意消息。",
+    "type": "bool",
+    "obvious_hint": true,
+    "default": true
+  },
+  "retention_days": {
+    "description": "保留天数",
+    "hint": "采集入库的图片保留 N 天后自动删除。0=关闭。默认只清采集入库的图，人工 /加图 收录的不受影响。",
+    "type": "int",
+    "obvious_hint": true,
+    "default": 0
+  },
+  "max_pool_mb": {
+    "description": "容量上限 (MB)",
+    "hint": "图库总容量超过该值时按「最旧优先」淘汰。0=关闭。同样默认只淘汰采集入库的图。",
+    "type": "int",
+    "obvious_hint": true,
+    "default": 0
+  },
+  "retention_source": {
+    "description": "清理范围",
+    "hint": "选「人工收录的也清理」会让 /加图 收录的图同样被超时删除，请谨慎。",
+    "type": "string",
+    "options": ["auto", "all"],
+    "labels": ["只清理采集入库的图（安全）", "人工收录的也清理（危险）"],
+    "default": "auto"
+  },
+  "retention_exempt": {
+    "description": "豁免分类",
+    "hint": "这些分类里的图片永不自动清理。把想长期保留的采集图搬进这些分类即可。",
+    "type": "list",
+    "default": []
+  },
+  "retention_sweep_hours": {
+    "description": "清理检查间隔(小时)",
+    "hint": "清理随群消息惰性触发，不占用后台常驻任务；长时间无消息时可发 /图库 清理 手动执行一次。",
+    "type": "int",
+    "default": 6
+  }
+}

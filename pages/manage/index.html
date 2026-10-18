@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>图库管理</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <h1 id="title">图库管理</h1>
+      <div id="stats" class="stats"></div>
+    </header>
+
+    <main class="layout">
+      <aside class="side">
+        <div class="side-head">
+          <span>分类</span>
+          <button id="new-cat" class="mini">新建</button>
+        </div>
+        <ul id="cats" class="cats"></ul>
+        <div class="side-foot">
+          <button id="toggle-aliases" class="mini ghost">标签别名</button>
+          <button id="toggle-bans" class="mini ghost">指纹黑名单</button>
+        </div>
+      </aside>
+
+      <section class="content">
+        <div class="toolbar">
+          <label class="chk"><input type="checkbox" id="select-all" /> 全选本页</label>
+          <button id="batch-block" class="mini">批量屏蔽</button>
+          <button id="batch-unblock" class="mini">批量解屏</button>
+          <button id="batch-move" class="mini">移动到…</button>
+          <button id="batch-copy" class="mini">复制到…</button>
+          <button id="batch-delete" class="mini danger">批量删除</button>
+          <span class="spacer"></span>
+          <label class="chk"><input type="checkbox" id="with-blocked" checked /> 显示已屏蔽</label>
+          <select id="page-size">
+            <option value="24">24 / 页</option>
+            <option value="48">48 / 页</option>
+            <option value="60">60 / 页</option>
+          </select>
+        </div>
+
+        <div id="hint" class="hint">正在载入…</div>
+        <div id="grid" class="grid"></div>
+
+        <div class="pager">
+          <button id="prev" class="mini">上一页</button>
+          <span id="page-info" class="ts"></span>
+          <button id="next" class="mini">下一页</button>
+        </div>
+      </section>
+    </main>
+
+    <section id="aliases-panel" class="bans hidden">
+      <div class="side-head">
+        <span>标签别名（命中别名即归一到原分类，不会新建 tag）</span>
+        <button id="close-aliases" class="mini ghost">关闭</button>
+      </div>
+      <ul id="aliases" class="bans-list"></ul>
+    </section>
+
+    <section id="bans-panel" class="bans hidden">
+      <div class="side-head">
+        <span>指纹黑名单（按 sha256 拉黑，防止再次被收录）</span>
+        <button id="close-bans" class="mini ghost">关闭</button>
+      </div>
+      <ul id="bans" class="bans-list"></ul>
+    </section>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
